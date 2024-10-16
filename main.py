@@ -1,6 +1,5 @@
 import pygame, sys
 
-from pygame.image import frombytes
 import flying_demon
 from hero import Hero
 from settings import *
@@ -47,7 +46,7 @@ while True:
 
     
 
-    hero.hero_update()
+    hero.hero_update(screen)
     flying_demon.update(hero, keys, screen, enemy_sprite_group)    
 
     if keys[pygame.K_RIGHT]:

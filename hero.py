@@ -19,8 +19,8 @@ class Hero(pygame.sprite.Sprite):
         self.attack_frame = pygame.transform.scale(pygame.image.load(f"./assets/hero/attack_2.png"),(self.width,self.height)) 
         self.bk_attack_frame = pygame.transform.scale(pygame.transform.flip(pygame.image.load(f"./assets/hero/attack_2.png"), True, False),(self.width,self.height))
 
-        self.take_hit_frame = pygame.transform.scale(pygame.image.load(f"./assets/hero/hero_take_hit_0.png"),(self.width,self.height)) 
-        self.bk_take_hit_frame = pygame.transform.scale(pygame.transform.flip(pygame.image.load(f"./assets/hero/hero_take_hit_0.png"),True, False),(self.width,self.height)) 
+        self.take_hit_frame = pygame.transform.scale(pygame.image.load(f"./assets/hero/hit.png"),(self.width,self.height)) 
+        self.bk_take_hit_frame = pygame.transform.scale(pygame.transform.flip(pygame.image.load(f"./assets/hero/hit.png"),True, False),(self.width,self.height)) 
 
 
         self.jump_frame = pygame.transform.scale(pygame.image.load(f"./assets/hero/hero_jump_0.png"),(self.width,self.height))
@@ -35,6 +35,7 @@ class Hero(pygame.sprite.Sprite):
         self.mask_img = self.mask.to_surface()
         self.facing_forward = True
         self.sword_rect = pygame.Rect(self.x_p, 550, 220, 140)
+        self.health_bar = pygame.Rect(40,40 ,600 ,30)
     
         
 
@@ -69,7 +70,6 @@ class Hero(pygame.sprite.Sprite):
         
 
     def attack(self):
-
         if self.facing_forward:
             self.image = self.attack_frame
         else:
@@ -80,7 +80,8 @@ class Hero(pygame.sprite.Sprite):
 
     
     def take_hit(self):
-
+        
+        self.health_bar.width -= 50
         if self.facing_forward:
             self.image = self.take_hit_frame
         else:
@@ -103,7 +104,8 @@ class Hero(pygame.sprite.Sprite):
                 self.velocity = 20
                 self.jumping = False
 
-    def hero_update(self):
+    def hero_update(self, screen):
+        pygame.draw.rect(screen , (255,0,0), self.health_bar)
         self.current_sprite += 0.1
         self.idel_update()
         if self.hit:

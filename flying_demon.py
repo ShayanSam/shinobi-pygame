@@ -1,3 +1,4 @@
+from sys import pycache_prefix
 import pygame
 from settings import *
 
@@ -10,31 +11,22 @@ class FlyingDeamon(pygame.sprite.Sprite):
         self.width = 220
         self.height = 210
         self.health = 80
-        self.count = 3
+        self.count = 10
         self.is_it_stop = False
         self.projectile_x = 900
         self.projectile_y = 640
         self.flying_frames = [pygame.transform.scale(pygame.image.load(f"./assets/flying_demon/demon_flying_{i}.png"),(self.height,self.width)) for i in range(4)]
         self.attack_frames = [pygame.transform.scale(pygame.image.load(f"./assets/flying_demon/demon_attack_{i}.png"),(self.height,self.width)) for i in range(8)]
         self.bk_flying_frames = [pygame.transform.scale(pygame.transform.flip(pygame.image.load(f"./assets/flying_demon/demon_flying_{i}.png"), True, False),(self.height,self.width)) for i in range(4)]
-
         self.hurt_frame = pygame.transform.scale(pygame.image.load(f"./assets/flying_demon/hurt_1.png"),(self.height,self.width))
-
-
         self.bk_hurt_frame = pygame.transform.scale(pygame.transform.flip(pygame.image.load(f"./assets/flying_demon/hurt_1.png"),True, False),(self.height,self.width)) 
-
         self.projectile = pygame.transform.scale(pygame.image.load(f"./assets/flying_demon/projectile.png"),(48, 32))
         self.projectile_rect = self.projectile.get_rect()
         self.projectile_rect.center = (self.projectile_x, self.projectile_y)
-
         self.bk_projectile = pygame.transform.scale(pygame.transform.flip(pygame.image.load(f"./assets/flying_demon/projectile.png"), True, False),(48, 32))
         self.bk_projectile_rect = self.projectile.get_rect()
         self.bk_projectile_rect.center = (self.projectile_x, self.projectile_y)
         self.bk_mask_projectile = pygame.mask.from_surface(self.bk_projectile)
-
-        self.death_frames = [pygame.transform.scale(pygame.image.load(f"./assets/flying_demon/death_{i}.png"),(self.height,self.width)) for i in range(7)]
-
-        self.bk_death_frames = [pygame.transform.scale(pygame.transform.flip(pygame.image.load(f"./assets/flying_demon/death_{i}.png"),True, False),(self.height,self.width)) for i in range(7)]
         self.current_sprite = 0
         self.image = self.flying_frames[self.current_sprite]
         self.rect = self.image.get_rect()
@@ -45,7 +37,6 @@ class FlyingDeamon(pygame.sprite.Sprite):
 
     def update(self, hero, keys, screen, group):
         if self.count > 0: 
-            group.draw(screen)
             self.current_sprite += 0.3
             self.rect.center = (self.x_p ,self.y_p)
             self.fly_forward()
@@ -53,8 +44,7 @@ class FlyingDeamon(pygame.sprite.Sprite):
             self.attack(screen, hero)
             self.hurt(hero.facing_forward, hero.sword_rect, keys ) 
             self.death()
-            self.death_animation(hero.facing_forward)
-            print(self.is_it_stop)
+            group.draw(screen)
         
             
 
@@ -116,17 +106,9 @@ class FlyingDeamon(pygame.sprite.Sprite):
             self.health -= 20
 
 
-    def death_animation(self, facing_forward):
-        if self.health < 0 : 
-            if self.current_sprite >= len(self.death_frames):
-                self.current_sprite = 0
-            if facing_forward:
-                 self.image = self.death_frames[int(self.current_sprite)]
-            else:
-                self.imgae = self.bk_death_frames[int(self.current_sprite)]
 
     def death(self):
-        if self.health < 0  :
+        if self.health < 0 : 
             self.is_it_stop = False
             self.count -= 1
             self.x_p = 2300
